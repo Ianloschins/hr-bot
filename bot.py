@@ -182,4 +182,4 @@ We wish you all the best in your future infractions elsewhere."""
     return stream
 
 # Start bot
-bot.run(DISCORD_TOKEN)
+bot.run(TOKEN)
