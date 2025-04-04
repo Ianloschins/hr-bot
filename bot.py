@@ -9,8 +9,8 @@ import random
 
 # Load secrets from .env
 load_dotenv()
-TOKEN = os.getenv("DISCORD_TOKEN")
-HResponse = os.getenv("OPENROUTER_API_KEY")
+DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
 # Discord bot setup
 intents = discord.Intents.default()
@@ -182,4 +182,4 @@ We wish you all the best in your future infractions elsewhere."""
     return stream
 
 # Start bot
-bot.run(TOKEN)
+bot.run(DISCORD_TOKEN)
