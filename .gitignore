@@ -1,1 +1,11 @@
+# Ignore virtual environment folder
+venv/
+
+# Ignore .env file containing secrets
 .env
+
+# Ignore __pycache__ folders
+__pycache__/
+
+# Ignore .DS_Store on MacOS
+.DS_Store
