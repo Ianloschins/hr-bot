@@ -1,16 +1,22 @@
 import os
-import io
-import requests
 import discord
 from discord.ext import commands
-from dotenv import load_dotenv
+from dotenv import load_dotenv  # Use this only for local testing
 from PIL import Image, ImageDraw, ImageFont
 import random
+import requests
+import io
 
-# Load secrets from .env
-load_dotenv()
+# For local testing, load .env file
+load_dotenv()  # Remove this for deployment if using environment variables in Render
+
+# Load token from environment variables
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+
+# Ensure the DISCORD_TOKEN is set
+if not DISCORD_TOKEN:
+    raise ValueError("No DISCORD_TOKEN found in environment variables!")
 
 # Discord bot setup
 intents = discord.Intents.default()
@@ -174,7 +180,7 @@ We wish you all the best in your future infractions elsewhere."""
 
     draw.text((50, 40), title, font=font_title, fill="black")
     draw.multiline_text((50, 110), body, font=font_text, fill="black", spacing=5)
-    draw.multiline_text((50, 460), signature, font=font_text, fill="black", spacing=4)
+    draw.multiline_text((50, 840), signature, font=font_text, fill="black", spacing=4)
 
     stream = io.BytesIO()
     img.save(stream, format='PNG')
