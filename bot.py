@@ -15,8 +15,8 @@ intents.message_content = True
 intents.members = True  # This is required for member join event
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-# Function to check if a message is "mean" using OpenRouter API
-async def is_mean_message(message_content):
+# Function to get AI response from OpenRouter
+async def get_ai_response(user_message):
     headers = {
         "Authorization": f"Bearer {OPENROUTER_API_KEY}",
         "X-Title": "HRBot"
@@ -27,7 +27,15 @@ async def is_mean_message(message_content):
         "messages": [
             {
                 "role": "system",
-                "content": f"Is this message mean or offensive: {message_content}"
+                "content": "You are HR Bot, a sarcastic and condescending HR representative. "
+                            "You are here to respond to HR-related queries with a tone that is judgmental, sarcastic, and professional. "
+                            "You are a Discord HR bot for a server that thrives on sarcasm and disdain. "
+                           "You only respond to messages related to HR. Your responses should be sarcastic, judgmental, and professional. "
+                           "Feel free to roast and respond to any questions or comments regarding HR."
+            },
+            {
+                "role": "user",
+                "content": user_message
             }
         ]
     }
@@ -35,11 +43,11 @@ async def is_mean_message(message_content):
     try:
         r = requests.post("https://openrouter.ai/api/v1/chat/completions", json=data, headers=headers)
         r.raise_for_status()
-        response_text = r.json()["choices"][0]["message"]["content"].strip().lower()
-        return 'yes' in response_text or 'offensive' in response_text
+        response_text = r.json()["choices"][0]["message"]["content"]
+        return response_text
     except Exception as e:
-        print(f"Error checking mean message: {e}")
-        return False
+        print(f"Error getting AI response: {e}")
+        return "HR is unavailable at the moment. Please try again later."
 
 # Bot event: Check every new message
 @bot.event
@@ -49,14 +57,8 @@ async def on_message(message):
 
     # Respond to "HR" in any case
     if 'hr' in message.content.lower():
-        await message.channel.send(f"{message.author.mention}, you've reached HR! How can I assist you today? 📋")
-
-    # Check if the message is mean using OpenRouter API
-    is_mean = await is_mean_message(message.content)
-    
-    if is_mean:
-        # Respond to the mean message with a sentence
-        await message.channel.send(f"{message.author.mention}, please be respectful. Let's keep the chat friendly!")
+        ai_response = await get_ai_response(message.content)  # Get AI response from OpenRouter
+        await message.channel.send(f"{message.author.mention}, {ai_response}")
 
     # Always process commands (this allows the bot to respond to commands like !terminate, !complaint, etc.)
     await bot.process_commands(message)
@@ -68,8 +70,8 @@ async def on_member_join(member):
     channel = discord.utils.get(member.guild.text_channels, name="hr-violations")  # You can change this to any channel you want
     if channel:
         await channel.send(f"👋 Welcome {member.mention} to the server! I’m **HR Bot**, your very unhelpful HR representative. "
-                           "I’m here to make your life a little more miserable."
-                           "Use commands like `!complaint <member>` to file a complaint. "
+                           "I’m here to make your life a little more miserable. Please keep your complaints ready, as I will be taking notes. "
+                           "Use commands like `!terminate <member>` to generate a termination letter, or `!complaint <member>` to file a complaint. "
                            "If you need to ask something, just mention **HR**! 📝💼")
 
 # Example command: !terminate
