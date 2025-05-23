@@ -86,6 +86,10 @@ Command	Description
 
 📸 Sample Output
 
+![alt text](image.png)
+
+![alt text](image-1.png)
+
 💼 Author
 
     Built by Ian Loschinskey – a professional with too much sarcasm and not enough PTO.
